@@ -12,6 +12,3 @@ export default {
   name: 'UserInformation'
 }
 </script>
-
-<style scoped>
-</style>
