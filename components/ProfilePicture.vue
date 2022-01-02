@@ -1,10 +1,16 @@
 <template>
-  <img src='https://avatars.githubusercontent.com/u/29120746?v=4' alt='ahmetkorkmaz' class="w-48 rounded-full border-2 border-gray-500 p-1">
+  <img :src="url" alt="ahmetkorkmaz" class="w-48 rounded-full border-2 border-gray-500 p-1">
 </template>
 
 <script>
 export default {
-  name: 'ProfilePicture'
+  name: 'ProfilePicture',
+  props: {
+    url: {
+      type: String,
+      default: 'https://avatars.githubusercontent.com/u/100000000000?v=4'
+    }
+  }
 }
 </script>
 
