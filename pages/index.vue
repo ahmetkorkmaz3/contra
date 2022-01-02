@@ -1,55 +1,26 @@
 <template>
   <div class="antialiased text-gray-400 bg-gray-900 h-screen flex flex-col justify-center px-56">
     <UserInformation @calculateData="calculateGraph" />
-    <Contributions />
+    <Contributions :data="contributions" />
   </div>
 </template>
 
 <script>
 export default {
   name: 'IndexPage',
+  data() {
+    return {
+      contributions: null,
+    };
+  },
   methods: {
     calculateGraph({ githubUsername, gitlabUsername }) {
-      this.getGithubContributions(githubUsername)
-      this.getGitlabContributions(gitlabUsername)
+      this.$axios
+        .get(`http://localhost:3001/contributions?githubUsername=${githubUsername}&gitlabUsername=${gitlabUsername}`)
+        .then(res => {
+          this.contributions = res.data.data
+        })
     },
-    getGithubContributions(username) {
-      this.$axios.post('https://api.github.com/graphql', {
-        query: `query {
-                  user(login: "${username}"){
-                    contributionsCollection {
-                      contributionCalendar {
-                        totalContributions
-                        weeks {
-                        contributionDays {
-                            contributionCount
-                            date
-                          }
-                        }
-                      }
-                    }
-                  }
-                }`
-      }, {
-        headers: {
-          'Authorization': `Bearer ${process.env.NUXT_ENV_GITHUB_PERSONAL_KEY}`,
-        }
-      }).then(res => {
-        console.log(res)
-      })
-    },
-    getGitlabContributions(username) {
-      this.$axios.get(`https://gitlab.com/users/${username}/calendar.json`, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      }).then(res => {
-        console.log(res)
-      }).catch(err => {
-        console.log(err)
-      })
-    }
   }
 }
 </script>
