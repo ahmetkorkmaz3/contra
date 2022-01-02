@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex w-full">
     <calendar-heatmap v-if="data !== null" class="w-full" :values="data" :end-date="Date.now()" :range-color="rangeColors" />
   </div>
 </template>
