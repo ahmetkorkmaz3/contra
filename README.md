@@ -19,7 +19,7 @@
 
 ## ScreenShot
 
-![ss](/Users/ahmetk/projects/contra/static/ss.png)
+![ss](./static/ss.png)
 
 ## Install
 
