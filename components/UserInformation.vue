@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-24 flex flex-col justify-center mb-16">
+  <div class="flex flex-col mb-16">
     <div class="inputs flex flex-row">
       <input type="text" id="github-username" v-model="githubUsername"
              v-on:keyup.enter="sendUsernameData"

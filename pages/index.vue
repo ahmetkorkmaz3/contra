@@ -1,7 +1,7 @@
 <template>
-  <div class="antialiased text-gray-400 bg-gray-900 h-screen flex flex-col justify-center px-56">
-    <UserInformation @calculateData="calculateGraph" />
-    <Contributions :data="contributions" />
+  <div class="antialiased text-gray-400 bg-gray-900 h-screen flex flex-col justify-center p-16">
+    <UserInformation v-if="contributions === null" @calculateData="calculateGraph" />
+    <User :contributions="contributions" v-if="contributions !== null" @close="back" />
   </div>
 </template>
 
@@ -21,6 +21,9 @@ export default {
           this.contributions = res.data.data
         })
     },
+    back() {
+      this.contributions = null
+    }
   }
 }
 </script>
