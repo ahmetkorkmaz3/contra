@@ -17,6 +17,10 @@
 
 ### ✨ [Demo](https://contra-psi.vercel.app)
 
+## ScreenShot
+
+![ss](/Users/ahmetk/projects/contra/static/ss.png)
+
 ## Install
 
 ```sh
