@@ -16,7 +16,7 @@ export default {
   methods: {
     calculateGraph({ githubUsername, gitlabUsername }) {
       this.$axios
-        .get(`${process.env.API_URL}/contributions?githubUsername=${githubUsername}&gitlabUsername=${gitlabUsername}`)
+        .get(`${process.env.NUXT_ENV_API_URL}/contributions?githubUsername=${githubUsername}&gitlabUsername=${gitlabUsername}`)
         .then(res => {
           this.contributions = res.data.data
         })
