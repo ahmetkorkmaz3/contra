@@ -11,7 +11,7 @@ export default {
   methods: {
     calculateGraph({ githubUsername, gitlabUsername }) {
       this.getGithubContributions(githubUsername)
-      // this.getGitlabContributions(gitlabUsername)
+      this.getGitlabContributions(gitlabUsername)
     },
     getGithubContributions(username) {
       this.$axios.post('https://api.github.com/graphql', {
