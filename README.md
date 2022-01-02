@@ -11,7 +11,7 @@
 
 > Combines GitHub and GitLab contributions calendar to create a single calendar
 
-> Notes: GitLab private repositories are not included. You shoul enable from profile settings.
+> Notes: GitLab private repositories are not included. You should enable from profile settings.
 
 ### 🏠 [Homepage](https://contra-psi.vercel.app)
 
