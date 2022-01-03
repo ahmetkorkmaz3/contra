@@ -1,5 +1,6 @@
 <template>
   <div class="antialiased text-gray-400 bg-gray-900 h-screen flex flex-col justify-center p-16">
+    <ForkMeOnGithub />
     <div class="container mx-auto">
       <UserInformation v-if="contributions === null" @calculateData="calculateGraph" />
       <User :contributions="contributions" v-if="contributions !== null" @close="back" :githubUsername="githubUsername"
