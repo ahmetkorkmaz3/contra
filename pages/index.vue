@@ -1,7 +1,10 @@
 <template>
   <div class="antialiased text-gray-400 bg-gray-900 h-screen flex flex-col justify-center p-16">
-    <UserInformation v-if="contributions === null" @calculateData="calculateGraph" />
-    <User :contributions="contributions" v-if="contributions !== null" @close="back" :githubUsername="githubUsername" :gitlabUsername="gitlabUsername" />
+    <div class="container mx-auto">
+      <UserInformation v-if="contributions === null" @calculateData="calculateGraph" />
+      <User :contributions="contributions" v-if="contributions !== null" @close="back" :githubUsername="githubUsername"
+            :gitlabUsername="gitlabUsername" />
+    </div>
   </div>
 </template>
 
@@ -12,8 +15,8 @@ export default {
     return {
       contributions: null,
       githubUsername: '',
-      gitlabUsername: '',
-    };
+      gitlabUsername: ''
+    }
   },
   methods: {
     calculateGraph({ githubUsername, gitlabUsername }) {
