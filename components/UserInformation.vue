@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col mb-16">
+  <div class="flex flex-col">
     <div class="inputs flex flex-row">
       <input type="text" id="github-username" v-model="githubUsername"
              v-on:keyup.enter="sendUsernameData"
@@ -14,8 +14,18 @@
 
     <button type="button"
             @click="sendUsernameData"
-            class='bg-indigo-600 text-white text-sm leading-6 font-medium py-2 px-3 rounded-lg'>Merge your graph
+            class='bg-indigo-600 text-white text-sm leading-6 font-medium py-2 px-3 rounded-lg'>
+      Merge your graph
     </button>
+
+    <div class="information flex flex-col mt-8">
+      <p>
+        **You need to show contributions of private projects on your public profile for GitLab.
+        <a href="https://gitlab.com/-/profile" class="hover:text-green-600" target="_blank">
+          Gitlab Profile Settings
+        </a>
+      </p>
+    </div>
   </div>
 </template>
 
