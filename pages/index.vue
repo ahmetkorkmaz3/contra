@@ -4,7 +4,7 @@
     <div class="container mx-auto">
       <UserInformation v-if="contributions === null" @calculateData="calculateGraph" />
       <User :contributions="contributions" v-if="contributions !== null" @close="back" :githubUsername="githubUsername"
-            :gitlabUsername="gitlabUsername" />
+            :gitlabUsername="gitlabUsername" :totalContributionCount="totalContributionCount" />
     </div>
   </div>
 </template>
@@ -15,8 +15,9 @@ export default {
   data() {
     return {
       contributions: null,
+      totalContributionCount: null,
       githubUsername: '',
-      gitlabUsername: ''
+      gitlabUsername: '',
     }
   },
   methods: {
@@ -26,7 +27,8 @@ export default {
       this.$axios
         .get(`${process.env.NUXT_ENV_API_URL}/contributions?githubUsername=${githubUsername}&gitlabUsername=${gitlabUsername}`)
         .then(res => {
-          this.contributions = res.data.data
+          this.contributions = res.data.data.contributions
+          this.totalContributionCount = res.data.data.totalContributionCount
         })
     },
     back() {

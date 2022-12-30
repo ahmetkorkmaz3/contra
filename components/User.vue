@@ -23,7 +23,7 @@
         </a>
       </div>
     </div>
-    <Contributions :data="contributions" />
+    <Contributions :data="contributions" :totalContributionCount="totalContributionCount" />
   </div>
 </template>
 
@@ -41,6 +41,10 @@ export default {
     },
     gitlabUsername: {
       type: String,
+      required: true,
+    },
+    totalContributionCount: {
+      type: Number,
       required: true,
     },
   },

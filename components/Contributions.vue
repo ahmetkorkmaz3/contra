@@ -1,5 +1,8 @@
 <template>
-  <div class="flex w-full">
+  <div class="flex w-full flex-col">
+    <div v-if="totalContributionCount !== null" class="mb-5">
+      {{ totalContributionCount }} contributions in the last year
+    </div>
     <calendar-heatmap v-if="data !== null" class="w-full" :values="data" :end-date="Date.now()" :range-color="rangeColors" />
   </div>
 </template>
@@ -13,7 +16,11 @@ export default {
     data: {
       type: Array,
       required: true
-    }
+    },
+    totalContributionCount: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
