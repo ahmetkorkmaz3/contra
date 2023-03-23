@@ -41,7 +41,17 @@ export default {
   methods: {
     sendUsernameData() {
       this.$emit('calculateData', { githubUsername: this.githubUsername, gitlabUsername: this.gitlabUsername });
+    },
+    sendUsernameIfProvided() {
+      this.githubUsername = this.$route.query.githubUsername
+      this.gitlabUsername = this.$route.query.gitlabUsername
+      if (this.githubUsername && this.gitlabUsername) {
+        this.sendUsernameData()
+      }
     }
-  }
+  },
+  beforeMount() {
+    this.sendUsernameIfProvided()
+  },
 }
 </script>
