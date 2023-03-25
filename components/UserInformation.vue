@@ -43,10 +43,12 @@ export default {
       this.$emit('calculateData', { githubUsername: this.githubUsername, gitlabUsername: this.gitlabUsername });
     },
     sendUsernameIfProvided() {
-      this.githubUsername = this.$route.query.githubUsername
-      this.gitlabUsername = this.$route.query.gitlabUsername
-      if (this.githubUsername && this.gitlabUsername) {
-        this.sendUsernameData()
+      if (this.$route.query.githubUsername !== undefined && this.$route.query.gitlabUsername !== undefined) {
+        this.githubUsername = this.$route.query.githubUsername
+        this.gitlabUsername = this.$route.query.gitlabUsername
+        if (this.githubUsername && this.gitlabUsername) {
+          this.sendUsernameData()
+        }
       }
     }
   },
