@@ -35,6 +35,15 @@ yarn install
 yarn dev
 ```
 
+## Integrate in your GitHub/GitLab profiles.
+To integrate contra in your GitHub and GitLab profile simply create a repository called as username in both (i.e. `ZappaBoy/ZappaBoy`).
+Then create a `README.md` in the repositories and add a screenshot of contra in your profile. You can automate this action to do screenshots automatically using some services like [thum.io](https://www.thum.io/). You can do that by simply appending the following snippet to your `README.md`:
+```markdown
+![ZappaBoy GitHub/GitLab Merged Contribution with Contra](https://image.thum.io/get/width/1200/fullpage/maxAge/24/wait/2/https://contra-psi.vercel.app/?githubUsername=ZappaBoy&gitlabUsername=ZappaBoy)
+```
+For a practical example check both [github.com/ZappaBoy/ZappaBoy](https://github.com/ZappaBoy/ZappaBoy) and [gitlab.com/ZappaBoy/ZappaBoy](https://gitlab.com/ZappaBoy/ZappaBoy).
+
+
 ## Author
 
 👤 **Ahmet Korkmaz**
