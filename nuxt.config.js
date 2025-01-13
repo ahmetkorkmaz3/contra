@@ -48,5 +48,15 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    babel: {
+      plugins: [
+        '@babel/plugin-transform-private-methods',
+        '@babel/plugin-transform-class-properties',
+        '@babel/plugin-transform-optional-chaining',
+        '@babel/plugin-transform-nullish-coalescing-operator',
+        '@babel/plugin-transform-private-property-in-object'
+      ]
+    }
+  }
 }
