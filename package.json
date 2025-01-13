@@ -15,6 +15,7 @@
     "@nuxtjs/axios": "^5.13.6",
     "core-js": "^3.19.3",
     "nuxt": "^2.15.8",
+    "three": "^0.172.0",
     "vue": "^2.6.14",
     "vue-calendar-heatmap": "^0.8.4",
     "vue-server-renderer": "^2.6.14",
@@ -25,6 +26,7 @@
     "@nuxtjs/tailwindcss": "^4.2.1",
     "eslint-config-prettier": "^8.3.0",
     "postcss": "^8.4.4",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "raw-loader": "^4.0.2"
   }
 }
