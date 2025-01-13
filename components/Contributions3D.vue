@@ -53,9 +53,9 @@ export default {
       const width = container.clientWidth;
       const height = container.clientHeight;
 
-      // Setup camera for better view
+      // Setup camera for side view
       this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-      this.camera.position.set(0, 15, 25);
+      this.camera.position.set(25, 10, 0); // Moved camera to side
       this.camera.lookAt(0, 0, 0);
 
       // Setup renderer
@@ -70,36 +70,36 @@ export default {
       this.renderer.shadowMap.enabled = true;
       this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-      // Add controls
+      // Add controls with adjusted settings for side view
       this.controls = new OrbitControls(this.camera, this.renderer.domElement);
       this.controls.enableDamping = true;
       this.controls.dampingFactor = 0.05;
       this.controls.screenSpacePanning = false;
-      this.controls.minDistance = 10;
+      this.controls.minDistance = 15;
       this.controls.maxDistance = 50;
       this.controls.maxPolarAngle = Math.PI / 2;
 
-      // Add lighting
+      // Adjust lighting for side view
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
       this.scene.add(ambientLight);
 
-      const frontLight = new THREE.SpotLight(0xffffff, 0.8);
-      frontLight.position.set(0, 15, 20);
-      frontLight.angle = Math.PI / 4;
-      frontLight.penumbra = 0.3;
-      frontLight.castShadow = true;
-      frontLight.shadow.mapSize.width = 2048;
-      frontLight.shadow.mapSize.height = 2048;
-      this.scene.add(frontLight);
+      const mainLight = new THREE.SpotLight(0xffffff, 0.8);
+      mainLight.position.set(20, 15, 0);
+      mainLight.angle = Math.PI / 4;
+      mainLight.penumbra = 0.3;
+      mainLight.castShadow = true;
+      mainLight.shadow.mapSize.width = 2048;
+      mainLight.shadow.mapSize.height = 2048;
+      this.scene.add(mainLight);
 
-      const backLight = new THREE.SpotLight(0xffffff, 0.4);
-      backLight.position.set(0, 15, -20);
-      backLight.angle = Math.PI / 4;
-      backLight.penumbra = 0.3;
-      backLight.castShadow = true;
-      backLight.shadow.mapSize.width = 2048;
-      backLight.shadow.mapSize.height = 2048;
-      this.scene.add(backLight);
+      const fillLight = new THREE.SpotLight(0xffffff, 0.4);
+      fillLight.position.set(-20, 15, 0);
+      fillLight.angle = Math.PI / 4;
+      fillLight.penumbra = 0.3;
+      fillLight.castShadow = true;
+      fillLight.shadow.mapSize.width = 2048;
+      fillLight.shadow.mapSize.height = 2048;
+      this.scene.add(fillLight);
 
       // Handle window resize
       window.addEventListener('resize', this.onWindowResize, false);
@@ -110,14 +110,20 @@ export default {
       this.animate();
     },
     createBasePlate() {
-      const baseWidth = 9;
-      const baseLength = 65;
+      // Optimize base dimensions based on grid size
+      const gridWidth = 7;
+      const gridSpacing = 1.2;
+      const totalGridWidth = (gridWidth - 1) * gridSpacing;
+      
+      // Base dimensions optimized for grid
+      const baseWidth = totalGridWidth + 2; // Add margin
+      const baseLength = 65; // Keep current length
       const baseHeight = 1;
 
       // Create base plate
       const baseGeometry = new THREE.BoxGeometry(baseWidth, baseHeight, baseLength);
       const baseMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0xfffffff,
+        color: 0xc0a080, // Bronze color
         metalness: 0.7,
         roughness: 0.2,
         reflectivity: 0.5,
@@ -131,13 +137,13 @@ export default {
       basePlate.castShadow = true;
       this.scene.add(basePlate);
 
-      // Add username text
+      // Add username text on the side
       const fontLoader = new FontLoader();
       fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
         const textGeometry = new TextGeometry(this.githubUsername, {
           font: font,
-          size: 1,
-          height: 0.2,
+          size: 1.2,
+          height: 0.3,
           curveSegments: 32,
           bevelEnabled: true,
           bevelThickness: 0.05,
@@ -147,7 +153,7 @@ export default {
         });
 
         const textMaterial = new THREE.MeshPhysicalMaterial({
-          color: 0xc0a080,
+          color: 0xd4b08c,
           metalness: 0.9,
           roughness: 0.1,
           reflectivity: 0.7,
@@ -158,11 +164,24 @@ export default {
         const textMesh = new THREE.Mesh(textGeometry, textMaterial);
         textGeometry.computeBoundingBox();
         const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+        const textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y;
         
-        console.log(baseLength, textWidth, -((-baseLength/2)-textWidth));
-
+        // Position text on the side of the base plate, centered vertically and horizontally
         textMesh.rotation.y = Math.PI / 2;
-        textMesh.position.set(-textWidth/2+(9.5), -1, 0);
+        textMesh.position.set(
+          -(baseWidth/2 + 0.3), // Slight offset from base
+          0, // Place at base level
+          0 // Center on Z axis
+        );
+        
+        // Center the text by computing its bounding box
+        textGeometry.computeBoundingBox();
+        const centerOffset = new THREE.Vector3();
+        centerOffset.x = 0;
+        centerOffset.y = 0;
+        centerOffset.z = -(textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x) / 2;
+        textMesh.geometry.translate(centerOffset.x, centerOffset.y, centerOffset.z);
+        
         textMesh.castShadow = true;
         
         this.scene.add(textMesh);
@@ -185,6 +204,7 @@ export default {
       const startX = -totalGridWidth / 2;
       const startZ = -totalGridLength / 2;
       
+      // Create contribution blocks
       this.data.forEach((contribution, index) => {
         const height = (contribution.count / maxContributions) * 2 || 0.1;
         const material = new THREE.MeshPhysicalMaterial({
@@ -200,10 +220,10 @@ export default {
         const row = Math.floor(index / gridWidth);
         const col = index % gridWidth;
 
-        // Position cubes
+        // Position cubes with precise alignment
         cube.position.set(
           startX + col * spacing,
-          height/2,  // Start from y=0 (top of base plate)
+          height/2 + 0.01, // Slight offset to prevent z-fighting
           startZ + row * spacing
         );
         cube.scale.y = height;
