@@ -51,20 +51,20 @@
         </div>
 
         <div class="bg-gray-700/30 rounded-xl p-4 sm:p-6 backdrop-blur-sm border border-gray-600/50">
-          <div class="text-center mb-4 sm:mb-6">
+          <div class="text-center">
             <div class="text-3xl sm:text-4xl font-bold text-white mb-1">{{ totalContributionCount }}</div>
             <div class="text-sm font-medium text-gray-400 uppercase tracking-wide">Total Contributions</div>
           </div>
-          
-          <div class="bg-gray-800/50 rounded-lg p-2 sm:p-4 shadow-inner">
-            <Contributions 
-              :data="contributions" 
-              :totalContributionCount="totalContributionCount"
-              class="w-full transform scale-90 sm:scale-100 origin-left"
-            />
-          </div>
         </div>
       </div>
+    </div>
+
+    <div class="bg-gray-800/50 rounded-lg p-2 sm:p-4 shadow-inner">
+      <Contributions 
+        :data="contributions" 
+        :totalContributionCount="totalContributionCount"
+        class="w-full transform origin-left"
+      />
     </div>
   </div>
 </template>
