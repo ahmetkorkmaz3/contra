@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import { CalendarHeatmap } from 'vue-calendar-heatmap'
+import { CalendarHeatmap } from 'vue3-calendar-heatmap'
+import 'vue3-calendar-heatmap/dist/style.css'
 
 export default {
   name: 'Contributions',

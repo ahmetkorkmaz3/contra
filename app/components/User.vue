@@ -50,7 +50,7 @@
           </a>
         </div>
 
-        <div class="bg-gray-700/30 rounded-xl p-4 sm:p-6 backdrop-blur-sm border border-gray-600/50">
+        <div class="bg-gray-700/30 rounded-xl p-4 sm:p-6 backdrop-blur-xs border border-gray-600/50">
           <div class="text-center">
             <div class="text-3xl sm:text-4xl font-bold text-white mb-1">{{ totalContributionCount }}</div>
             <div class="text-sm font-medium text-gray-400 uppercase tracking-wide">Total Contributions</div>
@@ -72,6 +72,7 @@
 <script>
 export default {
   name: 'User',
+  emits: ['close'],
   props: {
     contributions: {
       type: Array,
@@ -109,8 +110,8 @@ export default {
   },
   methods: {
     async getGithubProfilePicture() {
-      const res = await this.$axios.get(`https://api.github.com/users/${this.githubUsername}`)
-      this.profilePictureUrl = res.data.avatar_url
+      const res = await $fetch(`https://api.github.com/users/${this.githubUsername}`)
+      this.profilePictureUrl = res.avatar_url
     }
   }
 }

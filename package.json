@@ -2,42 +2,32 @@
   "name": "contra",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^22.19.0 || ^24.11.0 || >=26.0.0"
   },
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build && nuxt generate",
-    "start": "nuxt start",
+    "dev": "nuxt dev",
+    "build": "nuxt generate",
     "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:prettier",
     "lintfix": "prettier --write --list-different ."
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.13.6",
-    "@popperjs/core": "^2.11.8",
-    "consola": "^3.2.3",
-    "core-js": "^3.35.1",
-    "nuxt": "^2.17.3",
-    "vue": "^2.7.16",
-    "vue-calendar-heatmap": "^0.8.4",
-    "vue-server-renderer": "^2.7.16",
-    "vue-template-compiler": "^2.7.16",
-    "webpack": "^4.47.0"
+    "nuxt": "^4.5.2",
+    "tippy.js": "^6.3.7",
+    "vue": "^3.5.43",
+    "vue-router": "^5.3.1",
+    "vue3-calendar-heatmap": "^2.0.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0",
-    "@babel/plugin-transform-class-properties": "^7.25.9",
-    "@babel/plugin-transform-nullish-coalescing-operator": "^7.26.6",
-    "@babel/plugin-transform-optional-chaining": "^7.25.9",
-    "@babel/plugin-transform-private-methods": "^7.25.9",
-    "@babel/plugin-transform-private-property-in-object": "^7.25.9",
-    "@nuxtjs/tailwindcss": "^6.11.2",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "postcss": "^8.4.33",
-    "postcss-nesting": "^12.0.2",
-    "prettier": "^3.2.4"
+    "@tailwindcss/vite": "^4.3.3",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.9",
+    "tailwindcss": "^4.3.3"
   }
 }

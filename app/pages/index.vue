@@ -54,11 +54,12 @@ export default {
       this.loading = true
       this.error = null
       try {
-        const res = await this.$axios.get(
-          `${process.env.NUXT_ENV_API_URL}/contributions?githubUsername=${githubUsername}&gitlabUsername=${gitlabUsername}`
+        const res = await $fetch(
+          `${this.$config.public.apiUrl}/contributions`,
+          { query: { githubUsername, gitlabUsername } }
         )
-        this.contributions = res.data.data.contributions
-        this.totalContributionCount = res.data.data.totalContributionCount
+        this.contributions = res.data.contributions
+        this.totalContributionCount = res.data.totalContributionCount
         this.githubUsername = githubUsername
         this.gitlabUsername = gitlabUsername
       } catch (err) {
