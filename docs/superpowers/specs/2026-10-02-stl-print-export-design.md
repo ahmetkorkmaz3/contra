@@ -43,7 +43,7 @@ Rules:
 
 - Bar height uses the same ratio as the 3D view: `count / max`. The model uses the same 53-week window as the 2D and 3D views.
 - Each solid goes 0.2 into the solid under it. Thus the slicer joins all solids into one part.
-- The text size changes with the text length. The cap height is 7 at most. A long text gets smaller so that it fits in a width of 170.
+- The font line box (ascender to descender) is 7 high. Thus all texts get the same letter size. A text that is wider than 170 gets smaller until it fits.
 - An empty text gives a flat sloped face. The download still works.
 
 ## Files
@@ -51,17 +51,17 @@ Rules:
 | File | Job |
 |---|---|
 | `app/utils/contributionStats.js` | New function `calendarCells(data, now)`. It gives the 53-week window as `{ cells: [{ week, dow, count }], max }`. This logic is now in `Contributions3d.vue`. Both components use the new function, so the 3D view and the STL show the same days. |
-| `app/utils/printModel.js` | No Vue. `buildPrintModel({ cells, max, text, font, THREE })` gives a `BufferGeometry`. `exportStl(geometry)` gives a binary STL `Blob`. All sizes from the geometry section are constants at the top of the file. |
+| `app/utils/printModel.js` | No Vue. `parseFont(buffer)` gives an opentype.js font. `buildPrintModel({ cells, max, text, font })` gives a `BufferGeometry`. `exportStl(geometry)` gives a binary STL `Blob`. All sizes from the geometry section are constants at the top of the file. |
 | `app/components/PrintDialog.vue` | The same shell as `ShareDialog` (Teleport, Esc closes it, a click outside closes it). It holds the three.js preview, the text field, and the "Download STL" button. |
 | `app/components/User.vue` | A "3D Print" button next to the "Share" button. The `printOpen` state opens the dialog. |
-| `public/fonts/Inter-Bold.ttf` | The text font. Inter has the OFL license and supports Turkish letters (ş, ğ, ı, İ). The file is about 300 KB. The `helvetiker` font that comes with three.js does not support these letters. |
-| `package.json` | The `three` dependency and a `test` script. |
+| `public/fonts/Inter-Bold.ttf` | The text font (Inter 4.1). Inter has the OFL license and supports Turkish letters (ş, ğ, ı, İ). The file is 420 KB. The `helvetiker` font that comes with three.js does not support these letters. |
+| `package.json` | The `three` and `opentype.js` dependencies and a `test` script. |
 
 ## PrintDialog
 
 - Props: `cells`, `max`, `defaultText` (the GitHub username, or the GitLab username when there is no GitHub username).
-- The dialog loads three.js, `OrbitControls`, `TTFLoader`, and `STLExporter` with a dynamic `import()` when it opens. The bundle of the main page does not change.
-- `TTFLoader` uses the opentype.js copy that comes with three.js. No other font dependency is necessary.
+- `User.vue` uses `<LazyPrintDialog>`. Nuxt puts the dialog, three.js, and opentype.js in a separate chunk that loads when the dialog opens. The bundle of the main page does not change.
+- The model does not use `TTFLoader` from three.js. In three 0.186, `TTFLoader` loads opentype.js from a CDN URL. `printModel.js` uses opentype.js from npm and lays out the glyphs one by one, with kerning. The text shaping of opentype.js 2.0 fails on the GSUB table of Inter.
 - Preview: one color mesh (`#39d353`, the color of the highest level), a dark background, one directional light, and one ambient light. The mouse or a touch turns and zooms the model.
 - When the text changes, the dialog makes the model again after 250 ms (debounce). It calls `dispose()` on the old geometry.
 - A counter under the text field shows the length (`12/24`). The field accepts 24 characters at most.
