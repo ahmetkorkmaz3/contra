@@ -29,6 +29,34 @@ export function countsByDay(contributions) {
   return counts
 }
 
+export const WEEKS = 53
+
+// Day 0 of the epoch is a Thursday. The result is 0 for Sunday.
+export function weekday(day) {
+  return (day + 4) % 7
+}
+
+// The days of the calendar, from the Sunday 52 weeks before this week to today.
+// max is the highest count in this window.
+export function calendarCells(contributions, now) {
+  const counts = countsByDay(contributions)
+  const today = dayIndex(now)
+  const start = today - weekday(today) - (WEEKS - 1) * 7
+  const cells = []
+  let max = 0
+  for (let day = start; day <= today; day++) {
+    const count = counts.get(day) || 0
+    max = Math.max(max, count)
+    cells.push({
+      day,
+      week: Math.floor((day - start) / 7),
+      dow: weekday(day),
+      count,
+    })
+  }
+  return { cells, max }
+}
+
 export function getContributionStats(contributions) {
   const counts = countsByDay(contributions)
   const days = [...counts.keys()].sort((a, b) => a - b)

@@ -18,9 +18,10 @@ yarn generate      # same as build
 yarn preview       # serve the generated output
 yarn lint          # prettier --check .
 yarn lintfix       # prettier --write on changed files
+yarn test          # node --test on tests/*.test.js
 ```
 
-The repo has no test suite. ESLint is a dev dependency, but the repo has no ESLint config and no lint script for it. Prettier is the only active linter (`semi: false`, `singleQuote: true`). Most source files do not pass `yarn lint` at this time.
+`yarn test` runs the Node test runner on `tests/`. The tests cover the pure modules in `app/utils/` only, not the components. ESLint is a dev dependency, but the repo has no ESLint config and no lint script for it. Prettier is the only active linter (`semi: false`, `singleQuote: true`). Most source files do not pass `yarn lint` at this time.
 
 ## Environment
 
@@ -36,8 +37,10 @@ The app has one page, `app/pages/index.vue`. That page owns all state and swaps 
 2. `index.vue` calls `GET ${NUXT_ENV_API_URL}/contributions?githubUsername=&gitlabUsername=`. It reads `res.data.contributions` and `res.data.totalContributionCount`.
 3. `User` shows the result. It gets the avatar and the display name directly from `https://api.github.com/users/{name}` (no auth). It gets the stats (active days, streaks, best day) from `app/utils/contributionStats.js`. It passes the contributions array to `Contributions`.
 4. `Contributions` renders the array with `vue3-calendar-heatmap` (it needs the `tippy.js` peer and its `dist/style.css`). Each item must have the shape that `CalendarHeatmap` `values` expects (`{ date, count }`). The colors copy the GitHub dark theme. `rangeColor` needs 6 colors: index 0 is "no data" and index 5 is the maximum.
+   A 2D/3D toggle in `User` swaps `Contributions` for `Contributions3d`. The toggle saves the choice in `localStorage`. `Contributions3d` draws the same data as bars in an SVG with its own orthographic camera (no 3D library). Drag, double-click, or the arrow keys change the camera angle. The `viewBox` fits the calendar at each angle. The bars are keyed by position, not by day. A new draw order then changes attributes and does not move DOM nodes, so the grow animation does not start again.
 5. The "Share" button in `User` opens `ShareDialog`. `app/utils/shareCard.js` draws a 1200x630 PNG card on a canvas in the browser. The dialog downloads, copies, or shares the card, and opens the X and LinkedIn share screens. The SPA has no server for `og:image`, so the share link is `${apiUrl}/share?githubUsername=&gitlabUsername=` on contra-api. That page gives the Open Graph tags and a server-made card (`/api/og`) to X and LinkedIn, then sends browsers to the result page. Without `apiUrl`, the share link is the frontend URL and has no preview card.
-6. On a result, `index.vue` puts the usernames in the URL query. `User` emits `close`, and `index.vue` clears the query first, then resets to the form.
+6. The "3D Print" button in `User` opens `PrintDialog` (as `LazyPrintDialog`, so three.js loads only when it opens). `app/utils/printModel.js` turns the `calendarCells()` window, a text, and `public/fonts/Inter-Bold.ttf` into one three.js geometry and a binary STL file. The model is about 180 x 43 x 28 mm: bars on a plate, and the text raised on a sloped front face. The parts overlap by 0.2 mm, and the slicer joins them. The model is not one manifold mesh. The text uses opentype.js glyph by glyph, because `font.getPath()` throws on the GSUB table of Inter, and the three.js `TTFLoader` loads opentype.js from a CDN.
+7. On a result, `index.vue` puts the usernames in the URL query. `User` emits `close`, and `index.vue` clears the query first, then resets to the form.
 
 ## Styling
 
