@@ -207,8 +207,13 @@ export default {
         },
       ]
     },
+    // /api/share gives X and LinkedIn the Open Graph tags and the card image,
+    // then sends people to this result page. The SPA cannot give these tags.
     shareUrl() {
-      const url = new URL(window.location.pathname, window.location.origin)
+      const apiUrl = this.$config.public.apiUrl
+      const url = apiUrl
+        ? new URL(`${apiUrl}/share`, window.location.origin)
+        : new URL(window.location.pathname, window.location.origin)
       url.searchParams.set('githubUsername', this.githubUsername)
       url.searchParams.set('gitlabUsername', this.gitlabUsername)
       return url.toString()

@@ -154,8 +154,8 @@
         </div>
 
         <p class="mt-3 text-xs text-gray-500">
-          X and LinkedIn do not take the image from the link. Download or copy
-          the image, then add it to your post.
+          X and LinkedIn show your card as the link preview. Download or copy
+          the image to add it to the post as a photo.
         </p>
 
         <div class="mt-5">
