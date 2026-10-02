@@ -281,7 +281,9 @@ export default {
       this.geometry = geometry
       this.builtText = this.text
       if (this.mesh) this.mesh.geometry = geometry
-      const kept = [...this.text].slice(0, MAX_TEXT_LENGTH).join('')
+      const kept = [...this.text.normalize('NFC')]
+        .slice(0, MAX_TEXT_LENGTH)
+        .join('')
       this.unsupported = supportedText(this.text, this.font) !== kept
     },
     download() {

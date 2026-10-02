@@ -40,15 +40,19 @@ export function parseFont(buffer) {
 }
 
 // Glyph 0 is the "missing glyph" box, so characters that map to it are not in the font.
+// Some paste sources give decomposed (NFD) letters, and the glyphs have no mark positioning.
 export function supportedText(text, font) {
-  return [...text]
+  return [...text.normalize('NFC')]
     .slice(0, MAX_TEXT_LENGTH)
     .filter((ch) => font.charToGlyphIndex(ch) !== 0)
     .join('')
 }
 
 export function stlFileName(text) {
-  const name = text.replace(/[^\p{L}\p{N}_-]+/gu, '-').replace(/^-+|-+$/g, '')
+  const name = text
+    .normalize('NFC')
+    .replace(/[^\p{L}\p{N}_-]+/gu, '-')
+    .replace(/^-+|-+$/g, '')
   return `contra-${name || 'heatmap'}.stl`
 }
 

@@ -111,3 +111,10 @@ test('stlFileName makes a safe file name', () => {
   assert.equal(stlFileName(''), 'contra-heatmap.stl')
   assert.equal(stlFileName('🚀'), 'contra-heatmap.stl')
 })
+
+test('decomposed (NFD) text becomes composed letters', () => {
+  const nfd = 'Çağrı'.normalize('NFD')
+  assert.notEqual(nfd, 'Çağrı')
+  assert.equal(supportedText(nfd, font), 'Çağrı')
+  assert.equal(stlFileName(nfd), 'contra-Çağrı.stl')
+})
