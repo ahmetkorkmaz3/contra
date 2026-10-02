@@ -61,13 +61,12 @@
 
 <script>
 import {
-  countsByDay,
-  dayIndex,
+  WEEKS,
+  calendarCells,
   formatDay,
   formatNumber,
 } from '~/utils/contributionStats'
 
-const WEEKS = 53
 // All sizes are in tile units. One tile is one day.
 const MAX_HEIGHT = 7
 const EMPTY_HEIGHT = 0.08
@@ -84,11 +83,6 @@ const KEY_STEP = 10
 
 // Same colors as the 2D view. Index 0 is a day without contributions.
 const COLORS = ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353']
-
-// Day 0 of the epoch is a Thursday. The result is 0 for Sunday.
-function weekday(day) {
-  return (day + 4) % 7
-}
 
 function shade(hex, factor) {
   const value = parseInt(hex.slice(1), 16)
@@ -162,32 +156,23 @@ export default {
     },
     // The bars in world space. They do not change when the camera turns.
     cells() {
-      const counts = countsByDay(this.data)
-      const today = dayIndex(Date.now())
-      const start = today - weekday(today) - (WEEKS - 1) * 7
-      let max = 0
-      for (const [day, count] of counts) {
-        if (day >= start && day <= today) max = Math.max(max, count)
+      const { cells, max } = calendarCells(this.data, Date.now())
+      return {
+        cells: cells.map(({ day, week, dow, count }) => {
+          const level = count ? Math.max(1, Math.ceil((count / max) * 4)) : 0
+          const unit = count === 1 ? 'contribution' : 'contributions'
+          return {
+            week,
+            dow,
+            height: count
+              ? Math.max(0.3, (count / max) * MAX_HEIGHT)
+              : EMPTY_HEIGHT,
+            color: COLORS[level],
+            label: `${formatNumber(count)} ${unit} on ${formatDay(day)}`,
+          }
+        }),
+        maxHeight: max ? MAX_HEIGHT : EMPTY_HEIGHT,
       }
-
-      const cells = []
-      for (let day = start; day <= today; day++) {
-        const count = counts.get(day) || 0
-        const week = Math.floor((day - start) / 7)
-        const dow = weekday(day)
-        const level = count ? Math.max(1, Math.ceil((count / max) * 4)) : 0
-        const unit = count === 1 ? 'contribution' : 'contributions'
-        cells.push({
-          week,
-          dow,
-          height: count
-            ? Math.max(0.3, (count / max) * MAX_HEIGHT)
-            : EMPTY_HEIGHT,
-          color: COLORS[level],
-          label: `${formatNumber(count)} ${unit} on ${formatDay(day)}`,
-        })
-      }
-      return { cells, maxHeight: max ? MAX_HEIGHT : EMPTY_HEIGHT }
     },
     // The camera fits the whole calendar box, so no part goes out of the view.
     viewBox() {

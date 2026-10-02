@@ -14,7 +14,8 @@
     "postinstall": "nuxt prepare",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:prettier",
-    "lintfix": "prettier --write --list-different ."
+    "lintfix": "prettier --write --list-different .",
+    "test": "node --test 'tests/*.test.js'"
   },
   "dependencies": {
     "nuxt": "^4.5.2",
