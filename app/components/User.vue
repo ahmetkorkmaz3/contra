@@ -42,6 +42,25 @@
         <button
           type="button"
           class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-medium text-gray-200 transition-colors hover:border-gray-500 hover:text-white sm:flex-none"
+          @click="printOpen = true"
+        >
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5 2.75C5 1.784 5.784 1 6.75 1h6.5c.966 0 1.75.784 1.75 1.75v3.552c.377.046.752.097 1.126.153A2.212 2.212 0 0118 8.653v4.097A2.25 2.25 0 0115.75 15h-.241l.305 1.984A1.75 1.75 0 0114.084 19H5.915a1.75 1.75 0 01-1.73-2.016L4.492 15H4.25A2.25 2.25 0 012 12.75V8.653c0-1.082.775-2.034 1.874-2.198.374-.056.75-.107 1.126-.153V2.75zM13.5 6.12V2.75a.25.25 0 00-.25-.25h-6.5a.25.25 0 00-.25.25v3.37a41.4 41.4 0 017 0zm-7.538 6.83l-.54 3.512a.25.25 0 00.247.288h8.166a.25.25 0 00.247-.288l-.54-3.512a.25.25 0 00-.247-.212H6.21a.25.25 0 00-.248.212z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          3D Print
+        </button>
+        <button
+          type="button"
+          class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-medium text-gray-200 transition-colors hover:border-gray-500 hover:text-white sm:flex-none"
           @click="shareOpen = true"
         >
           <svg
@@ -148,11 +167,20 @@
       :shareText="shareText"
       @close="shareOpen = false"
     />
+    <!-- Lazy, so three.js and the font code load only when the dialog opens. -->
+    <LazyPrintDialog
+      v-if="printOpen"
+      :cells="calendar.cells"
+      :max="calendar.max"
+      :defaultText="githubUsername || gitlabUsername"
+      @close="printOpen = false"
+    />
   </div>
 </template>
 
 <script>
 import {
+  calendarCells,
   formatDay,
   formatNumber,
   getContributionStats,
@@ -201,6 +229,7 @@ export default {
       profileName: '',
       loading: true,
       shareOpen: false,
+      printOpen: false,
       viewOptions: ['2d', '3d'],
       view: readView(),
     }
@@ -224,6 +253,9 @@ export default {
     },
     summary() {
       return getContributionStats(this.contributions)
+    },
+    calendar() {
+      return calendarCells(this.contributions, Date.now())
     },
     stats() {
       const { activeDays, longestStreak, currentStreak, bestDay } = this.summary
