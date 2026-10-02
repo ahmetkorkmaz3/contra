@@ -5,7 +5,7 @@
     @close="$emit('close')"
   >
     <div
-      class="relative aspect-[1200/630] overflow-hidden rounded-xl border border-gray-800 bg-gray-950"
+      class="relative aspect-[1200/630] overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"
     >
       <img
         v-if="imageUrl"
@@ -15,11 +15,14 @@
       />
       <div
         v-else-if="renderError"
-        class="flex h-full items-center justify-center p-6 text-center text-sm text-red-300"
+        class="flex h-full items-center justify-center p-6 text-center text-sm text-red-600 dark:text-red-300"
       >
         {{ renderError }}
       </div>
-      <div v-else class="h-full w-full animate-pulse bg-gray-800/60"></div>
+      <div
+        v-else
+        class="h-full w-full animate-pulse bg-gray-200/60 dark:bg-gray-800/60"
+      ></div>
     </div>
 
     <div class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -61,7 +64,7 @@
       </a>
       <button
         type="button"
-        class="share-button border border-gray-700 bg-gray-800 text-gray-100 hover:border-gray-500"
+        class="share-button border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500"
         :disabled="!blob"
         @click="downloadImage"
       >
@@ -83,7 +86,7 @@
       <button
         v-if="canShareFile"
         type="button"
-        class="share-button border border-gray-700 bg-gray-800 text-gray-100 hover:border-gray-500"
+        class="share-button border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500"
         :disabled="!blob"
         @click="shareImage"
       >
@@ -102,7 +105,7 @@
       <button
         v-else-if="canCopyImage"
         type="button"
-        class="share-button border border-gray-700 bg-gray-800 text-gray-100 hover:border-gray-500"
+        class="share-button border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-400 dark:hover:border-gray-500"
         :disabled="!blob"
         @click="copyImage"
       >
@@ -131,7 +134,7 @@
     <div class="mt-5">
       <label
         for="share-link"
-        class="mb-1.5 block text-sm font-medium text-gray-300"
+        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
       >
         Link
       </label>
@@ -140,7 +143,7 @@
           id="share-link"
           :value="shareUrl"
           readonly
-          class="min-w-0 flex-1 rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-2 text-sm text-gray-300 focus:border-indigo-500 focus:outline-hidden"
+          class="min-w-0 flex-1 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/60 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:outline-hidden"
           @focus="$event.target.select()"
         />
         <button

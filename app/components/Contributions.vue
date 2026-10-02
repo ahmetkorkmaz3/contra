@@ -9,7 +9,7 @@
       :range-color="rangeColors"
       :round="2"
       tooltip-unit="contributions"
-      dark-mode
+      :dark-mode="theme === 'dark'"
     />
   </div>
 </template>
@@ -17,9 +17,13 @@
 <script>
 import { CalendarHeatmap } from 'vue3-calendar-heatmap'
 import 'vue3-calendar-heatmap/dist/style.css'
+import { HEATMAP_COLORS } from '~/utils/heatmapColors'
 
 export default {
   name: 'Contributions',
+  setup() {
+    return { theme: useTheme().theme }
+  },
   props: {
     data: {
       type: Array,
@@ -33,15 +37,14 @@ export default {
   data() {
     return {
       endDate: Date.now(),
-      rangeColors: [
-        '#161b22',
-        '#161b22',
-        '#0e4429',
-        '#006d32',
-        '#26a641',
-        '#39d353',
-      ],
     }
+  },
+  computed: {
+    // CalendarHeatmap needs 6 colors. Index 0 is "no data", and it uses the empty color.
+    rangeColors() {
+      const colors = HEATMAP_COLORS[this.theme]
+      return [colors[0], ...colors]
+    },
   },
   mounted() {
     // On narrow screens, show the most recent months first.
@@ -55,11 +58,11 @@ export default {
 </script>
 
 <style scoped>
-.contra-heatmap :deep(svg.vch__wrapper.dark-mode text) {
-  fill: #8b949e;
+.contra-heatmap :deep(svg.vch__wrapper text) {
+  fill: var(--heatmap-label);
 }
 .contra-heatmap :deep(.vch__legend) {
-  color: #8b949e;
+  color: var(--heatmap-label);
   font-size: 0.75rem;
 }
 </style>

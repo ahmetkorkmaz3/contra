@@ -5,18 +5,18 @@
     @close="$emit('close')"
   >
     <div
-      class="relative aspect-[2/1] touch-none overflow-hidden rounded-xl border border-gray-800 bg-gray-950"
+      class="relative aspect-[2/1] touch-none overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"
     >
       <!-- three.js puts its canvas here. Vue does not manage the children of this element. -->
       <div ref="canvasHost" class="absolute inset-0"></div>
       <div
         v-if="loadError"
-        class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center text-sm text-red-300"
+        class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center text-sm text-red-600 dark:text-red-300"
       >
         {{ loadError }}
         <button
           type="button"
-          class="rounded-lg border border-gray-700 px-3 py-1.5 text-gray-200 hover:border-gray-500 hover:text-white"
+          class="rounded-lg border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-gray-800 dark:text-gray-200 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white"
           @click="load"
         >
           Retry
@@ -24,22 +24,25 @@
       </div>
       <div
         v-else-if="previewError"
-        class="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-gray-400"
+        class="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-gray-600 dark:text-gray-400"
       >
         {{ previewError }}
       </div>
       <div
         v-else-if="!ready"
-        class="absolute inset-0 animate-pulse bg-gray-800/60"
+        class="absolute inset-0 animate-pulse bg-gray-200/60 dark:bg-gray-800/60"
       ></div>
     </div>
-    <p v-if="!previewError" class="mt-2 text-xs text-[#8b949e]">
+    <p
+      v-if="!previewError"
+      class="mt-2 text-xs text-[#57606a] dark:text-[#8b949e]"
+    >
       Drag to turn. Scroll or pinch to zoom.
     </p>
 
     <label
       for="print-text"
-      class="mt-5 block text-sm font-medium text-gray-300"
+      class="mt-5 block text-sm font-medium text-gray-700 dark:text-gray-300"
     >
       Text on the front
     </label>
@@ -50,10 +53,10 @@
       autocomplete="off"
       spellcheck="false"
       placeholder="Your nickname"
-      class="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none"
+      class="mt-1.5 w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none"
     />
     <div class="mt-1 flex justify-between gap-3 text-xs">
-      <span class="text-amber-300">
+      <span class="text-amber-700 dark:text-amber-300">
         {{ unsupported ? 'Some characters are not supported' : '' }}
       </span>
       <span class="tabular-nums text-gray-500">
@@ -109,11 +112,15 @@ function letters(text) {
 
 // The color of the highest level in the 2D and 3D views.
 const MODEL_COLOR = '#39d353'
-const BACKGROUND = '#030712'
+// The preview background is the page background of each theme.
+const BACKGROUND = { dark: '#030712', light: '#f9fafb' }
 
 export default {
   name: 'PrintDialog',
   emits: ['close'],
+  setup() {
+    return { theme: useTheme().theme }
+  },
   props: {
     // The cells and max from calendarCells().
     cells: {
@@ -145,6 +152,11 @@ export default {
     },
   },
   watch: {
+    theme(value) {
+      if (!this.scene) return
+      this.scene.background = new Color(BACKGROUND[value])
+      this.requestRender()
+    },
     text(value) {
       const chars = letters(value)
       // The new value runs this watcher again.
@@ -203,7 +215,7 @@ export default {
       host.appendChild(this.renderer.domElement)
 
       this.scene = new Scene()
-      this.scene.background = new Color(BACKGROUND)
+      this.scene.background = new Color(BACKGROUND[this.theme])
       this.scene.add(new AmbientLight('#ffffff', 0.6))
       const light = new DirectionalLight('#ffffff', 2.2)
       light.position.set(-60, -120, 160)

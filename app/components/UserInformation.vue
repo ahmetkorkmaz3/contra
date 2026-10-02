@@ -5,7 +5,7 @@
         <div v-for="field in fields" :key="field.id">
           <label
             :for="field.id"
-            class="mb-1.5 block text-sm font-medium text-gray-300"
+            class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             {{ field.label }}
           </label>
@@ -29,7 +29,7 @@
               autocomplete="off"
               autocapitalize="off"
               spellcheck="false"
-              class="block w-full rounded-lg border border-gray-700 bg-gray-800/60 py-2.5 pl-10 pr-3 text-white placeholder-gray-500 transition-colors focus:border-indigo-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/40 disabled:opacity-60"
+              class="block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/60 py-2.5 pl-10 pr-3 text-gray-900 dark:text-white placeholder-gray-500 transition-colors focus:border-indigo-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/40 disabled:opacity-60"
               :placeholder="field.placeholder"
               :disabled="loading"
               required
@@ -40,7 +40,7 @@
 
       <button
         type="submit"
-        class="flex w-full items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition-colors hover:bg-indigo-500 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
+        class="flex w-full items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition-colors hover:bg-indigo-500 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
         :disabled="!githubUsername || !gitlabUsername || loading"
       >
         <template v-if="loading">
@@ -70,10 +70,10 @@
       </button>
 
       <div
-        class="flex gap-3 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-sm text-gray-400"
+        class="flex gap-3 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-sm text-gray-600 dark:text-gray-400"
       >
         <svg
-          class="mt-0.5 h-5 w-5 shrink-0 text-amber-400"
+          class="mt-0.5 h-5 w-5 shrink-0 text-amber-500 dark:text-amber-400"
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
@@ -86,13 +86,15 @@
         </svg>
         <p>
           To include private GitLab contributions, enable
-          <span class="text-gray-200">“Include private contributions”</span>
+          <span class="text-gray-800 dark:text-gray-200"
+            >“Include private contributions”</span
+          >
           in your
           <a
             href="https://gitlab.com/-/profile"
             target="_blank"
             rel="noopener"
-            class="font-medium text-indigo-400 underline-offset-4 hover:text-indigo-300 hover:underline"
+            class="font-medium text-indigo-600 dark:text-indigo-400 underline-offset-4 hover:text-indigo-500 dark:hover:text-indigo-300 hover:underline"
             >GitLab profile settings</a
           >.
         </p>

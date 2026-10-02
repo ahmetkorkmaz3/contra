@@ -1,10 +1,10 @@
 <template>
   <div
-    class="relative overflow-hidden rounded-full bg-gray-800 ring-2 ring-gray-700 ring-offset-2 ring-offset-gray-900"
+    class="relative overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800 ring-2 ring-gray-200 dark:ring-gray-700 ring-offset-2 ring-offset-white dark:ring-offset-gray-900"
   >
     <div
       v-if="loading"
-      class="absolute inset-0 animate-pulse bg-gray-700"
+      class="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-700"
     ></div>
     <img
       v-else-if="url && !failed"

@@ -11,7 +11,9 @@
           class="h-16 w-16 shrink-0 sm:h-20 sm:w-20"
         />
         <div class="min-w-0">
-          <h2 class="truncate text-xl font-semibold text-white sm:text-2xl">
+          <h2
+            class="truncate text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl"
+          >
             {{ profileName || githubUsername }}
           </h2>
           <div class="mt-2 flex flex-wrap gap-2">
@@ -21,7 +23,7 @@
               :href="account.href"
               target="_blank"
               rel="noopener"
-              class="inline-flex items-center gap-1.5 rounded-full border border-gray-700 bg-gray-800/60 px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:border-gray-500 hover:text-white"
+              class="inline-flex items-center gap-1.5 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/60 px-2.5 py-1 text-xs font-medium text-gray-700 dark:text-gray-300 transition-colors hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white"
               :title="`Open ${account.label} profile`"
             >
               <svg
@@ -41,7 +43,7 @@
       <div class="flex gap-2">
         <button
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-medium text-gray-200 transition-colors hover:border-gray-500 hover:text-white sm:flex-none"
+          class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white sm:flex-none"
           @click="openPrint"
         >
           <svg
@@ -60,7 +62,7 @@
         </button>
         <button
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-medium text-gray-200 transition-colors hover:border-gray-500 hover:text-white sm:flex-none"
+          class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white sm:flex-none"
           @click="shareOpen = true"
         >
           <svg
@@ -101,13 +103,21 @@
       <div
         v-for="stat in stats"
         :key="stat.label"
-        class="rounded-xl border border-gray-800 bg-gray-800/40 p-4"
-        :class="stat.highlight && 'border-indigo-500/30 bg-indigo-500/10'"
+        class="rounded-xl border p-4"
+        :class="
+          stat.highlight
+            ? 'border-indigo-500/30 bg-indigo-500/10'
+            : 'border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-800/40'
+        "
       >
-        <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">
+        <dt
+          class="text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-gray-400"
+        >
           {{ stat.label }}
         </dt>
-        <dd class="mt-1 text-2xl font-bold tabular-nums text-white sm:text-3xl">
+        <dd
+          class="mt-1 text-2xl font-bold tabular-nums text-gray-900 dark:text-white sm:text-3xl"
+        >
           {{ stat.value }}
         </dd>
         <dd v-if="stat.hint" class="mt-0.5 truncate text-xs text-gray-500">
@@ -117,17 +127,19 @@
     </dl>
 
     <div
-      class="mt-6 rounded-xl border border-gray-800 bg-gray-950/50 p-3 sm:p-5"
+      class="mt-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/50 p-3 sm:p-5"
     >
       <div class="mb-3 flex items-center justify-between gap-3">
         <div class="flex items-baseline gap-3">
-          <h3 class="text-sm font-medium text-gray-300">Last 12 months</h3>
+          <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Last 12 months
+          </h3>
           <span v-if="view === '2d'" class="text-xs text-gray-500 sm:hidden"
             >Scroll to see all</span
           >
         </div>
         <div
-          class="inline-flex rounded-lg border border-gray-700 bg-gray-800/60 p-0.5"
+          class="inline-flex rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/60 p-0.5"
           role="group"
           aria-label="Heatmap view"
         >
@@ -139,7 +151,7 @@
             :class="
               view === option
                 ? 'bg-indigo-600 text-white'
-                : 'text-gray-400 hover:text-white'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             "
             :aria-pressed="view === option"
             @click="setView(option)"

@@ -24,6 +24,21 @@ export default defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' },
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+      // Set the theme class before the first paint, so the page does not flash.
+      // A saved choice wins. Without one, use the system setting.
+      // useTheme() in app/composables/ uses the same storage key.
+      script: [
+        {
+          innerHTML: `(function () {
+  var theme
+  try { theme = localStorage.getItem('contra:theme') } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+  }
+  if (theme === 'dark') document.documentElement.classList.add('dark')
+})()`,
+        },
+      ],
     },
   },
 

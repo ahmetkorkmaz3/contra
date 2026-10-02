@@ -1,28 +1,35 @@
 <template>
-  <div class="relative min-h-screen overflow-hidden bg-gray-950 text-gray-100">
+  <div
+    class="relative min-h-screen overflow-hidden bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100"
+  >
     <div
       class="pointer-events-none absolute inset-x-0 -top-40 h-[32rem] bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.25),transparent_60%)]"
       aria-hidden="true"
     ></div>
 
     <ForkMeOnGithub />
+    <ThemeToggle class="absolute left-4 top-4 z-10" />
 
     <main
       class="relative mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-12 sm:px-6 sm:py-16 lg:px-8"
     >
       <header class="mb-10 text-center sm:mb-12">
         <div
-          class="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-300"
+          class="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-700 dark:text-indigo-300"
         >
-          <span class="h-1.5 w-1.5 rounded-full bg-indigo-400"></span>
+          <span
+            class="h-1.5 w-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400"
+          ></span>
           GitHub + GitLab
         </div>
         <h1
-          class="mb-4 text-4xl font-bold tracking-tight text-white sm:text-5xl"
+          class="mb-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl"
         >
           Contribution Graph Merger
         </h1>
-        <p class="mx-auto max-w-2xl text-base text-gray-400 sm:text-lg">
+        <p
+          class="mx-auto max-w-2xl text-base text-gray-600 dark:text-gray-400 sm:text-lg"
+        >
           Merge your GitHub and GitLab contributions into one graph. Share it
           with a single link.
         </p>
@@ -35,10 +42,10 @@
         <div
           v-if="error"
           role="alert"
-          class="mb-4 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200"
+          class="mb-4 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-700 dark:text-red-200"
         >
           <svg
-            class="mt-0.5 h-5 w-5 shrink-0 text-red-400"
+            class="mt-0.5 h-5 w-5 shrink-0 text-red-500 dark:text-red-400"
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden="true"
@@ -52,7 +59,7 @@
           <p class="flex-1">{{ error }}</p>
           <button
             type="button"
-            class="rounded-md p-0.5 text-red-300 hover:bg-red-500/20 hover:text-red-100"
+            class="rounded-md p-0.5 text-red-600 dark:text-red-300 hover:bg-red-500/20 hover:text-red-800 dark:hover:text-red-100"
             aria-label="Dismiss error"
             @click="error = null"
           >
@@ -70,7 +77,7 @@
         </div>
 
         <div
-          class="rounded-2xl border border-gray-800 bg-gray-900/80 shadow-2xl shadow-black/40 backdrop-blur"
+          class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 shadow-2xl shadow-gray-300/40 dark:shadow-black/40 backdrop-blur"
         >
           <UserInformation
             v-if="contributions === null"
@@ -94,7 +101,7 @@
           href="https://github.com/ahmetkorkmaz3/contra"
           target="_blank"
           rel="noopener"
-          class="text-gray-400 underline-offset-4 hover:text-gray-200 hover:underline"
+          class="text-gray-600 dark:text-gray-400 underline-offset-4 hover:text-gray-800 dark:hover:text-gray-200 hover:underline"
         >
           Source on GitHub
         </a>
