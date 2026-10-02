@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* dark: utilities follow the .dark class on html, not the system setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Tailwind 4 sets cursor: default on buttons. Keep the Tailwind 3 behavior. */
 @layer base {
   button:not(:disabled),
@@ -10,18 +13,33 @@
 
 @layer base {
   html {
+    background-color: var(--color-gray-50);
+    color-scheme: light;
+    --heatmap-label: #57606a;
+  }
+  html.dark {
     background-color: var(--color-gray-950);
     color-scheme: dark;
+    --heatmap-label: #8b949e;
   }
 }
 
 /* Heatmap tooltip (tippy.js), in the same style as the cards. */
 .tippy-box {
-  background-color: var(--color-gray-800);
-  border: 1px solid var(--color-gray-700);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-200);
   border-radius: 0.5rem;
+  color: var(--color-gray-900);
   font-size: 0.75rem;
 }
 .tippy-box > .tippy-arrow {
+  color: var(--color-white);
+}
+.dark .tippy-box {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-gray-700);
+  color: var(--color-white);
+}
+.dark .tippy-box > .tippy-arrow {
   color: var(--color-gray-800);
 }

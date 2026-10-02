@@ -3,7 +3,7 @@
     <!-- Close only when the press and the release are both on the backdrop.
          A text selection or a drag that ends here does not close the dialog. -->
     <div
-      class="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-6"
+      class="fixed inset-0 z-50 flex items-end justify-center bg-gray-900/40 dark:bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-6"
       @pointerdown="pressedBackdrop = $event.target === $event.currentTarget"
       @click="closeFromBackdrop"
     >
@@ -12,16 +12,19 @@
         role="dialog"
         aria-modal="true"
         :aria-labelledby="titleId"
-        class="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl border border-gray-800 bg-gray-900 p-5 shadow-2xl sm:rounded-2xl sm:p-6"
+        class="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-2xl sm:rounded-2xl sm:p-6"
       >
         <div class="mb-4 flex items-center justify-between">
-          <h2 :id="titleId" class="text-lg font-semibold text-white">
+          <h2
+            :id="titleId"
+            class="text-lg font-semibold text-gray-900 dark:text-white"
+          >
             {{ title }}
           </h2>
           <button
             ref="closeButton"
             type="button"
-            class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-800 hover:text-white"
+            class="rounded-lg p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
             aria-label="Close"
             @click="$emit('close')"
           >

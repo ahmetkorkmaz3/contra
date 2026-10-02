@@ -32,14 +32,14 @@
       </g>
     </svg>
     <div
-      class="mt-2 flex items-center justify-between gap-3 text-xs text-[#8b949e]"
+      class="mt-2 flex items-center justify-between gap-3 text-xs text-[#57606a] dark:text-[#8b949e]"
     >
       <div class="flex items-center gap-2">
         <span>Drag to rotate</span>
         <button
           v-if="rotated"
           type="button"
-          class="rounded px-1.5 py-0.5 text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
+          class="rounded px-1.5 py-0.5 text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
           @click="resetView"
         >
           Reset
@@ -48,7 +48,7 @@
       <div class="flex items-center gap-1">
         <span class="mr-1">Less</span>
         <span
-          v-for="color in legendColors"
+          v-for="color in colors"
           :key="color"
           class="h-2.5 w-2.5 rounded-[2px]"
           :style="{ backgroundColor: color }"
@@ -66,6 +66,7 @@ import {
   formatDay,
   formatNumber,
 } from '~/utils/contributionStats'
+import { HEATMAP_COLORS } from '~/utils/heatmapColors'
 
 // All sizes are in tile units. One tile is one day.
 const MAX_HEIGHT = 7
@@ -80,9 +81,6 @@ const MIN_PITCH = 10
 const MAX_PITCH = 85
 const DRAG_SPEED = 0.4
 const KEY_STEP = 10
-
-// Same colors as the 2D view. Index 0 is a day without contributions.
-const COLORS = ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353']
 
 function shade(hex, factor) {
   const value = parseInt(hex.slice(1), 16)
@@ -127,6 +125,9 @@ function points(corners) {
 
 export default {
   name: 'Contributions3d',
+  setup() {
+    return { theme: useTheme().theme }
+  },
   props: {
     data: {
       type: Array,
@@ -145,8 +146,9 @@ export default {
     }
   },
   computed: {
-    legendColors() {
-      return COLORS
+    // Same colors as the 2D view. Index 0 is a day without contributions.
+    colors() {
+      return HEATMAP_COLORS[this.theme]
     },
     rotated() {
       return this.yaw !== DEFAULT_YAW || this.pitch !== DEFAULT_PITCH
@@ -167,7 +169,7 @@ export default {
             height: count
               ? Math.max(0.3, (count / max) * MAX_HEIGHT)
               : EMPTY_HEIGHT,
-            color: COLORS[level],
+            level,
             label: `${formatNumber(count)} ${unit} on ${formatDay(day)}`,
           }
         }),
@@ -207,6 +209,7 @@ export default {
           const v0 = cell.dow + GAP
           const v1 = cell.dow + 1 - GAP
           const h = cell.height
+          const color = this.colors[cell.level]
           const u = sideX ? u1 : u0
           const v = sideZ ? v1 : v0
           return {
@@ -215,7 +218,7 @@ export default {
             depth: depth(cell.week + 0.5, cell.dow + 0.5),
             faces: [
               {
-                color: shade(cell.color, lightX),
+                color: shade(color, lightX),
                 points: points([
                   project(u, v0, h),
                   project(u, v1, h),
@@ -224,7 +227,7 @@ export default {
                 ]),
               },
               {
-                color: shade(cell.color, lightZ),
+                color: shade(color, lightZ),
                 points: points([
                   project(u0, v, h),
                   project(u1, v, h),
@@ -233,7 +236,7 @@ export default {
                 ]),
               },
               {
-                color: cell.color,
+                color,
                 points: points([
                   project(u0, v0, h),
                   project(u1, v0, h),
