@@ -34,9 +34,10 @@ The app has one page, `app/pages/index.vue`. That page owns all state and swaps 
 
 1. `UserInformation` shows the form for the GitHub and GitLab usernames. It emits `calculateData`. If the URL has `?githubUsername=...&gitlabUsername=...`, it submits the form automatically in `beforeMount`. This gives shareable links.
 2. `index.vue` calls `GET ${NUXT_ENV_API_URL}/contributions?githubUsername=&gitlabUsername=`. It reads `res.data.contributions` and `res.data.totalContributionCount`.
-3. `User` shows the result. It gets the avatar directly from `https://api.github.com/users/{name}` (no auth). It passes the contributions array to `Contributions`.
-4. `Contributions` renders the array with `vue3-calendar-heatmap` (it needs the `tippy.js` peer and its `dist/style.css`). Each item must have the shape that `CalendarHeatmap` `values` expects (`{ date, count }`). The colors copy the GitHub dark theme.
-5. `User` emits `close`, and `index.vue` resets to the form.
+3. `User` shows the result. It gets the avatar and the display name directly from `https://api.github.com/users/{name}` (no auth). It gets the stats (active days, streaks, best day) from `app/utils/contributionStats.js`. It passes the contributions array to `Contributions`.
+4. `Contributions` renders the array with `vue3-calendar-heatmap` (it needs the `tippy.js` peer and its `dist/style.css`). Each item must have the shape that `CalendarHeatmap` `values` expects (`{ date, count }`). The colors copy the GitHub dark theme. `rangeColor` needs 6 colors: index 0 is "no data" and index 5 is the maximum.
+5. The "Share" button in `User` opens `ShareDialog`. `app/utils/shareCard.js` draws a 1200x630 PNG card on a canvas in the browser. The dialog downloads, copies, or shares the card, and opens the X and LinkedIn share screens. Link previews on X and LinkedIn do not show this card, because the SPA has no server for `og:image`.
+6. On a result, `index.vue` puts the usernames in the URL query. `User` emits `close`, and `index.vue` clears the query first, then resets to the form.
 
 ## Styling
 

@@ -8,14 +8,19 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'contra',
+      title: 'Contra · Merge GitHub and GitLab contributions',
       htmlAttrs: {
         lang: 'en',
       },
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: '' },
+        {
+          name: 'description',
+          content:
+            'Merge your GitHub and GitLab contribution calendars into one heatmap.',
+        },
+        { name: 'theme-color', content: '#030712' },
         { name: 'format-detection', content: 'telephone=no' },
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
