@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+/* Tailwind 4 sets cursor: default on buttons. Keep the Tailwind 3 behavior. */
+@layer base {
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--color-gray-950);
+    color-scheme: dark;
+  }
+}
+
+/* Heatmap tooltip (tippy.js), in the same style as the cards. */
+.tippy-box {
+  background-color: var(--color-gray-800);
+  border: 1px solid var(--color-gray-700);
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+}
+.tippy-box > .tippy-arrow {
+  color: var(--color-gray-800);
+}
