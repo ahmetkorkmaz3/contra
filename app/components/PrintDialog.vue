@@ -1,111 +1,78 @@
 <template>
-  <Teleport to="body">
+  <BaseDialog
+    title="Print your graph"
+    title-id="print-dialog-title"
+    @close="$emit('close')"
+  >
     <div
-      class="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-6"
-      @click.self="$emit('close')"
+      class="relative aspect-[2/1] touch-none overflow-hidden rounded-xl border border-gray-800 bg-gray-950"
     >
+      <!-- three.js puts its canvas here. Vue does not manage the children of this element. -->
+      <div ref="canvasHost" class="absolute inset-0"></div>
       <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="print-dialog-title"
-        class="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl border border-gray-800 bg-gray-900 p-5 shadow-2xl sm:rounded-2xl sm:p-6"
+        v-if="loadError"
+        class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center text-sm text-red-300"
       >
-        <div class="mb-4 flex items-center justify-between">
-          <h2 id="print-dialog-title" class="text-lg font-semibold text-white">
-            Print your graph
-          </h2>
-          <button
-            ref="closeButton"
-            type="button"
-            class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-800 hover:text-white"
-            aria-label="Close"
-            @click="$emit('close')"
-          >
-            <svg
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div
-          class="relative aspect-[2/1] touch-none overflow-hidden rounded-xl border border-gray-800 bg-gray-950"
-        >
-          <!-- three.js puts its canvas here. Vue does not manage the children of this element. -->
-          <div ref="canvasHost" class="absolute inset-0"></div>
-          <div
-            v-if="loadError"
-            class="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center text-sm text-red-300"
-          >
-            {{ loadError }}
-            <button
-              type="button"
-              class="rounded-lg border border-gray-700 px-3 py-1.5 text-gray-200 hover:border-gray-500 hover:text-white"
-              @click="load"
-            >
-              Retry
-            </button>
-          </div>
-          <div
-            v-else-if="previewError"
-            class="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-gray-400"
-          >
-            {{ previewError }}
-          </div>
-          <div
-            v-else-if="!ready"
-            class="absolute inset-0 animate-pulse bg-gray-800/60"
-          ></div>
-        </div>
-        <p v-if="!previewError" class="mt-2 text-xs text-[#8b949e]">
-          Drag to turn. Scroll or pinch to zoom.
-        </p>
-
-        <label
-          for="print-text"
-          class="mt-5 block text-sm font-medium text-gray-300"
-        >
-          Text on the front
-        </label>
-        <input
-          id="print-text"
-          v-model="text"
-          type="text"
-          :maxlength="maxLength"
-          autocomplete="off"
-          spellcheck="false"
-          placeholder="Your nickname"
-          class="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none"
-        />
-        <div class="mt-1 flex justify-between gap-3 text-xs">
-          <span class="text-amber-300">
-            {{ unsupported ? 'Some characters are not supported' : '' }}
-          </span>
-          <span class="tabular-nums text-gray-500">
-            {{ length }}/{{ maxLength }}
-          </span>
-        </div>
-
+        {{ loadError }}
         <button
           type="button"
-          class="print-button mt-5 w-full bg-indigo-600 text-white hover:bg-indigo-500"
-          :disabled="!ready"
-          @click="download"
+          class="rounded-lg border border-gray-700 px-3 py-1.5 text-gray-200 hover:border-gray-500 hover:text-white"
+          @click="load"
         >
-          Download STL
+          Retry
         </button>
-        <p class="mt-3 text-center text-xs text-gray-500">
-          About 180 x 43 x 28 mm. It prints flat, without supports.
-        </p>
       </div>
+      <div
+        v-else-if="previewError"
+        class="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-gray-400"
+      >
+        {{ previewError }}
+      </div>
+      <div
+        v-else-if="!ready"
+        class="absolute inset-0 animate-pulse bg-gray-800/60"
+      ></div>
     </div>
-  </Teleport>
+    <p v-if="!previewError" class="mt-2 text-xs text-[#8b949e]">
+      Drag to turn. Scroll or pinch to zoom.
+    </p>
+
+    <label
+      for="print-text"
+      class="mt-5 block text-sm font-medium text-gray-300"
+    >
+      Text on the front
+    </label>
+    <input
+      id="print-text"
+      v-model="text"
+      type="text"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Your nickname"
+      class="mt-1.5 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none"
+    />
+    <div class="mt-1 flex justify-between gap-3 text-xs">
+      <span class="text-amber-300">
+        {{ unsupported ? 'Some characters are not supported' : '' }}
+      </span>
+      <span class="tabular-nums text-gray-500">
+        {{ length }}/{{ maxLength }}
+      </span>
+    </div>
+
+    <button
+      type="button"
+      class="print-button mt-5 w-full bg-indigo-600 text-white hover:bg-indigo-500"
+      :disabled="!ready"
+      @click="download"
+    >
+      Download STL
+    </button>
+    <p class="mt-3 text-center text-xs text-gray-500">
+      About 180 x 43 x 28 mm. It prints flat, without supports.
+    </p>
+  </BaseDialog>
 </template>
 
 <script>
@@ -130,10 +97,16 @@ import {
   parseFont,
   stlFileName,
   supportedText,
-} from '~/utils/printModel'
+} from '~/lib/printModel'
+import { loadPrintFont } from '~/lib/printFont'
 
-const FONT_URL = '/fonts/Inter-Bold.ttf'
 const REBUILD_DELAY = 250
+// Count the letters of the composed (NFC) text. maxlength counts UTF-16 units,
+// so an emoji counts as 2 there.
+function letters(text) {
+  return [...text.normalize('NFC')]
+}
+
 // The color of the highest level in the 2D and 3D views.
 const MODEL_COLOR = '#39d353'
 const BACKGROUND = '#030712'
@@ -158,7 +131,7 @@ export default {
   },
   data() {
     return {
-      text: [...this.defaultText].slice(0, MAX_TEXT_LENGTH).join(''),
+      text: letters(this.defaultText).slice(0, MAX_TEXT_LENGTH).join(''),
       maxLength: MAX_TEXT_LENGTH,
       ready: false,
       unsupported: false,
@@ -168,43 +141,43 @@ export default {
   },
   computed: {
     length() {
-      return [...this.text].length
+      return letters(this.text).length
     },
   },
   watch: {
-    text() {
+    text(value) {
+      const chars = letters(value)
+      // The new value runs this watcher again.
+      if (chars.length > MAX_TEXT_LENGTH) {
+        this.text = chars.slice(0, MAX_TEXT_LENGTH).join('')
+        return
+      }
       clearTimeout(this.rebuildTimer)
       this.rebuildTimer = setTimeout(this.rebuild, REBUILD_DELAY)
     },
   },
   mounted() {
-    this.$refs.closeButton.focus()
-    document.addEventListener('keydown', this.onKeydown)
-    document.body.style.overflow = 'hidden'
     this.startPreview()
     this.load()
   },
   beforeUnmount() {
     // A font response that comes after this point must not touch the scene.
     this.closed = true
-    document.removeEventListener('keydown', this.onKeydown)
-    document.body.style.overflow = ''
     clearTimeout(this.rebuildTimer)
     this.resizeObserver?.disconnect()
-    this.renderer?.setAnimationLoop(null)
+    cancelAnimationFrame(this.frame)
     this.controls?.dispose()
     this.geometry?.dispose()
     this.material?.dispose()
+    // dispose() keeps the WebGL context. Browsers allow only about 16 contexts.
+    this.renderer?.forceContextLoss()
     this.renderer?.dispose()
   },
   methods: {
-    onKeydown(event) {
-      if (event.key === 'Escape') this.$emit('close')
-    },
     async load() {
       this.loadError = ''
       try {
-        const buffer = await $fetch(FONT_URL, { responseType: 'arrayBuffer' })
+        const buffer = await loadPrintFont()
         if (this.closed) return
         this.font = parseFont(buffer)
         this.rebuild()
@@ -256,7 +229,14 @@ export default {
       this.resizeObserver = new ResizeObserver(this.resize)
       this.resizeObserver.observe(host)
       this.resize()
-      this.renderer.setAnimationLoop(() => {
+      this.controls.addEventListener('change', this.requestRender)
+    },
+    // Draw only when something changes, not 60 times a second.
+    // With damping, controls.update() sends 'change' again until the camera stops.
+    requestRender() {
+      if (!this.renderer || this.frame) return
+      this.frame = requestAnimationFrame(() => {
+        this.frame = null
         this.controls.update()
         this.renderer.render(this.scene, this.camera)
       })
@@ -267,6 +247,7 @@ export default {
       this.renderer.setSize(clientWidth, clientHeight)
       this.camera.aspect = clientWidth / clientHeight
       this.camera.updateProjectionMatrix()
+      this.requestRender()
     },
     rebuild() {
       clearTimeout(this.rebuildTimer)
@@ -281,9 +262,8 @@ export default {
       this.geometry = geometry
       this.builtText = this.text
       if (this.mesh) this.mesh.geometry = geometry
-      const kept = [...this.text.normalize('NFC')]
-        .slice(0, MAX_TEXT_LENGTH)
-        .join('')
+      this.requestRender()
+      const kept = letters(this.text).slice(0, MAX_TEXT_LENGTH).join('')
       this.unsupported = supportedText(this.text, this.font) !== kept
     },
     download() {

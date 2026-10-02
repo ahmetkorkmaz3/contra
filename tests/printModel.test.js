@@ -16,7 +16,7 @@ import {
   parseFont,
   stlFileName,
   supportedText,
-} from '../app/utils/printModel.js'
+} from '../app/lib/printModel.js'
 
 const file = readFileSync(
   new URL('../public/fonts/Inter-Bold.ttf', import.meta.url),
@@ -117,4 +117,13 @@ test('decomposed (NFD) text becomes composed letters', () => {
   assert.notEqual(nfd, 'Çağrı')
   assert.equal(supportedText(nfd, font), 'Çağrı')
   assert.equal(stlFileName(nfd), 'contra-Çağrı.stl')
+})
+
+test('characters without an outline count as unsupported', () => {
+  assert.equal(supportedText('a​b', font), 'ab')
+  assert.equal(supportedText('a b', font), 'a b')
+  const zeroWidth = buildPrintModel({ cells, max: 8, text: '​', font })
+  const withoutText = buildPrintModel({ cells, max: 8, text: '', font })
+  assert.equal(triangles(zeroWidth), triangles(withoutText))
+  assert.equal(buildText('​', font), null)
 })

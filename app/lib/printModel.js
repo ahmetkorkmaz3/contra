@@ -10,7 +10,7 @@ import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 // The package has no exports field. This path works in Node and in Vite.
 import { parse } from 'opentype.js/dist/opentype.mjs'
-import { WEEKS } from './contributionStats.js'
+import { WEEKS } from '../utils/contributionStats.js'
 
 // All sizes are in mm. x is the width (weeks), y is the depth (0 is the front), z is up.
 export const PITCH = 3.2
@@ -40,11 +40,16 @@ export function parseFont(buffer) {
 }
 
 // Glyph 0 is the "missing glyph" box, so characters that map to it are not in the font.
+// A glyph without an outline (for example U+200B) prints nothing, so only spaces may have none.
 // Some paste sources give decomposed (NFD) letters, and the glyphs have no mark positioning.
 export function supportedText(text, font) {
   return [...text.normalize('NFC')]
     .slice(0, MAX_TEXT_LENGTH)
-    .filter((ch) => font.charToGlyphIndex(ch) !== 0)
+    .filter(
+      (ch) =>
+        font.charToGlyphIndex(ch) !== 0 &&
+        (/\s/.test(ch) || font.charToGlyph(ch).getPath().commands.length > 0),
+    )
     .join('')
 }
 
@@ -118,9 +123,9 @@ function bar(cell, max) {
 }
 
 export function buildText(text, font) {
-  const trimmed = text.trim()
-  if (!trimmed) return null
-  const geometry = new ExtrudeGeometry(textShapes(trimmed, font), {
+  const shapes = textShapes(text.trim(), font)
+  if (!shapes.length) return null
+  const geometry = new ExtrudeGeometry(shapes, {
     depth: TEXT_RELIEF + OVERLAP,
     curveSegments: 6,
     bevelEnabled: false,
