@@ -16,25 +16,25 @@
           >
             {{ profileName || avatarUsername }}
           </h2>
-          <div class="mt-2 flex flex-wrap gap-2">
+          <div class="mt-2 grid w-64 max-w-full grid-cols-2 gap-2">
             <a
               v-for="account in accounts"
               :key="`${account.label}-${account.username}`"
               :href="account.href"
               target="_blank"
               rel="noopener"
-              class="inline-flex items-center gap-1.5 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/60 px-2.5 py-1 text-xs font-medium text-gray-700 dark:text-gray-300 transition-colors hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white"
+              class="inline-flex min-w-0 items-center gap-1.5 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/60 px-2.5 py-1 text-xs font-medium text-gray-700 dark:text-gray-300 transition-colors hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white"
               :title="`Open ${account.label} profile`"
             >
               <svg
-                class="h-3.5 w-3.5"
+                class="h-3.5 w-3.5 shrink-0"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden="true"
               >
                 <path :d="account.icon" />
               </svg>
-              {{ account.username }}
+              <span class="truncate">{{ account.username }}</span>
             </a>
           </div>
         </div>
