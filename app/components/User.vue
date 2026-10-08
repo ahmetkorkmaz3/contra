@@ -7,19 +7,19 @@
         <ProfilePicture
           :url="profilePictureUrl"
           :loading="loading"
-          :alt="`${githubUsername} avatar`"
+          :alt="`${avatarUsername} avatar`"
           class="h-16 w-16 shrink-0 sm:h-20 sm:w-20"
         />
         <div class="min-w-0">
           <h2
             class="truncate text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl"
           >
-            {{ profileName || githubUsername }}
+            {{ profileName || avatarUsername }}
           </h2>
           <div class="mt-2 flex flex-wrap gap-2">
             <a
               v-for="account in accounts"
-              :key="account.label"
+              :key="`${account.label}-${account.username}`"
               :href="account.href"
               target="_blank"
               rel="noopener"
@@ -249,20 +249,20 @@ export default {
   },
   computed: {
     accounts() {
+      const accountsOf = (label, usernames, host, icon) =>
+        usernames.split(',').map((username) => ({
+          label,
+          username,
+          href: `https://${host}/${username}`,
+          icon,
+        }))
       return [
-        {
-          label: 'GitHub',
-          username: this.githubUsername,
-          href: `https://github.com/${this.githubUsername}`,
-          icon: GITHUB_ICON,
-        },
-        {
-          label: 'GitLab',
-          username: this.gitlabUsername,
-          href: `https://gitlab.com/${this.gitlabUsername}`,
-          icon: GITLAB_ICON,
-        },
+        ...accountsOf('GitHub', this.githubUsername, 'github.com', GITHUB_ICON),
+        ...accountsOf('GitLab', this.gitlabUsername, 'gitlab.com', GITLAB_ICON),
       ]
+    },
+    avatarUsername() {
+      return this.githubUsername.split(',')[0]
     },
     summary() {
       return getContributionStats(this.contributions)
@@ -341,7 +341,7 @@ export default {
   async mounted() {
     try {
       const res = await $fetch(
-        `https://api.github.com/users/${this.githubUsername}`,
+        `https://api.github.com/users/${this.avatarUsername}`,
       )
       this.profilePictureUrl = res.avatar_url
       this.profileName = res.name || ''
